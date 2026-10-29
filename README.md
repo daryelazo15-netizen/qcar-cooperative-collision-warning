@@ -37,10 +37,27 @@ Tracks expire when their last update is older than `risk.expire_source_age_s`. S
 
 ## Installation
 
+There are two levels, depending on what you want to run.
+
+**1. Tracking and collision module only** (replay over detection streams; no GPU, no HEAL, no cars):
+
+    git clone https://github.com/daryelazo15-netizen/qcar-cooperative-collision-warning
+    cd qcar-cooperative-collision-warning
     python3 -m venv .venv && . .venv/bin/activate
     pip install -r requirements.txt
 
-Python 3.11. `tracking/` and `collision/` need only the standard library and `shapely`. The live loop and `perception/` need the HEAL environment (torch, opencood) and a ROS 1 network to the cars; see `perception/README.md` and `live/README.md`. Run everything from the repository root.
+Python 3.11. `tracking/` and `collision/` need only the standard library and `shapely`; the viewer adds `numpy`, `opencv-python` and `Pillow`. Run everything from the repository root.
+
+**2. Perception and the live loop** (cooperative detection on the cars). In addition to level 1, set up the HEAL fork that provides cooperative perception:
+
+    git clone https://github.com/Saavkd7/QCAR-HEAL_Integration
+    cd QCAR-HEAL_Integration && git checkout 71606bc005eafde25c5c673a77251d2e1296c3e3
+    git apply /path/to/qcar-cooperative-collision-warning/perception/diffs/extrinsic.diff
+    git apply /path/to/qcar-cooperative-collision-warning/perception/diffs/vehicles.diff
+    python opencood/utils/setup.py build_ext --inplace
+    cp qcar_testbed_integration/machine_paths.example.json qcar_testbed_integration/machine_paths.json   # then fill in local paths
+
+Install the fork's environment (Python 3.8, torch 1.12, spconv; see the fork's README), download the two checkpoints from the release [`checkpoints-v1`](https://github.com/daryelazo15-netizen/qcar-cooperative-collision-warning/releases/tag/checkpoints-v1) into `perception/model_dirs/coop/` and `perception/model_dirs/single/`, and set `QCAR_HEAL_ROOT` to the fork clone. The live loop also needs a ROS 1 network to the two cars. Details: `perception/README.md` and `live/README.md`.
 
 ## Replay (no cars, no detector)
 
@@ -68,6 +85,8 @@ Two terminals on the workstation, started in this order (details, environment va
 
 ## Relation to the HEAL fork
 
+Cooperative perception is not implemented in this repository. It comes from [`Saavkd7/QCAR-HEAL_Integration`](https://github.com/Saavkd7/QCAR-HEAL_Integration), a fork of [HEAL](https://github.com/yifanlu0227/HEAL) (Lu et al., ICLR 2024) that runs HEAL on the QCar testbed. This repository holds only our changes to it (`perception/`) and the parts built on its detections: tracking, the collision module and the live loop.
+
 The detector is the fork `github.com/Saavkd7/QCAR-HEAL_Integration` at the pinned commit **`71606bc005eafde25c5c673a77251d2e1296c3e3`**. Its files are not copied here. Our changes are patches against that commit (`perception/diffs/`: camera extrinsics, the +3.0 degree yaw offset, the live-loop and viewer patches) plus plugins and model configs (`perception/plugins/`, `perception/model_dirs/`). `live/` holds the patched live-loop files as complete files; the patches in `perception/diffs/` are their differences to the fork. Setup steps are in `perception/README.md`.
 
 ## Checkpoints
@@ -86,7 +105,16 @@ prints the `unittest` summary of the `tracking`, `collision`, `perception` and `
 - **Kevin Saavedra** (MSc, University of Calabria): integration of HEAL on the QCar testbed ([`QCAR-HEAL_Integration`](https://github.com/Saavkd7/QCAR-HEAL_Integration)), including the original live loop. The files in `live/` (`run_live.py`, `heal_input.py`, `viewer.py`) derive from his `qcar/realtime/` code; `perception/diffs/` shows the changes.
 - Supervisors: **Chadi Assi** (Concordia University) and **Floriano De Rango** (University of Calabria). Part of the **MITACS** program.
 
-Perception is built on **HEAL** by Yifan Lu et al. (*An Extensible Framework for Open Heterogeneous Collaborative Perception*, ICLR 2024).
+Perception is built on **HEAL** by Yifan Lu et al. (*An Extensible Framework for Open Heterogeneous Collaborative Perception*, ICLR 2024). If you use this work, please also cite HEAL:
+
+```bibtex
+@inproceedings{lu2024an,
+  title={An Extensible Framework for Open Heterogeneous Collaborative Perception},
+  author={Lu, Yifan and Hu, Yue and Zhong, Yiqi and Wang, Dequan and Chen, Siheng and Wang, Yanfeng},
+  booktitle={The Twelfth International Conference on Learning Representations},
+  year={2024}
+}
+```
 
 ## License
 
