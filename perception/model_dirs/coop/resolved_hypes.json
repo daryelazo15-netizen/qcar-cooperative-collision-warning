@@ -1,0 +1,450 @@
+{
+ "Ncams": 1,
+ "_live_expected_checkpoint_sha256": "968de39a20385bbe7686101f30cefcd7418cabf9e24030551e10e980d1f88743",
+ "_pilot_original_checkpoint": null,
+ "_qcar_amp_enabled": true,
+ "_qcar_amp_requested": true,
+ "_qcar_effective_batch_size": 2,
+ "_qcar_ego_exclusion_radius_model": 1.5,
+ "_qcar_exclude_reference_ego": true,
+ "_qcar_finetune_source_sha256": "eb63e0ae2649b8b86774a0e41ae0eb41f2be2c2f669cbc0479adeb474725cdd0",
+ "_qcar_freeze_encoder_blocks": 8,
+ "_qcar_gradient_accumulation_steps": 2,
+ "_qcar_gradient_clip": 10.0,
+ "_qcar_loss_packages": [
+  "opencood.loss",
+  "qcar.losses"
+ ],
+ "_qcar_model_packages": [
+  "opencood.models"
+ ],
+ "_qcar_plugins": [
+  "qcar.patches.patch_1cam_loader",
+  "qcar.patches.patch_real_extrinsic",
+  "<REPO_ROOT>/perception/plugins/exclude_reference_ego.py",
+  "<REPO_ROOT>/perception/plugins/camera_tilt_car2.py"
+ ],
+ "_qcar_seed": 42,
+ "_qcar_stage": "cooperative detector (two cars fused)",
+ "add_data_extension": [
+  "bev_visibility.png"
+ ],
+ "cav_lidar_range": [
+  -51.2,
+  -51.2,
+  -3,
+  51.2,
+  51.2,
+  1
+ ],
+ "comm_range": 70,
+ "fusion": {
+  "args": {
+   "data_aug_conf": "None",
+   "grid_conf": "None",
+   "proj_first": false
+  },
+  "core_method": "intermediateheter",
+  "dataset": "opv2v"
+ },
+ "heter": {
+  "assignment_path": "<MODEL_DIR>/modality_assign_real.json",
+  "ego_modality": "m2",
+  "mapping_dict": {
+   "m1": "m2",
+   "m2": "m2",
+   "m3": "m2",
+   "m4": "m2"
+  },
+  "modality_setting": {
+   "m2": {
+    "core_method": "lift_splat_shoot",
+    "data_aug_conf": {
+     "H": 480,
+     "Ncams": 1,
+     "W": 640,
+     "bot_pct_lim": [
+      0.0,
+      0.05
+     ],
+     "cams": [
+      "camera0",
+      "camera1",
+      "camera2",
+      "camera3"
+     ],
+     "final_dim": [
+      384,
+      512
+     ],
+     "rand_flip": true,
+     "resize_lim": [
+      0.8125,
+      0.875
+     ],
+     "rot_lim": [
+      -3.6,
+      3.6
+     ]
+    },
+    "grid_conf": {
+     "ddiscr": [
+      2,
+      50,
+      48
+     ],
+     "mode": "LID",
+     "xbound": [
+      -51.2,
+      51.2,
+      0.4
+     ],
+     "ybound": [
+      -51.2,
+      51.2,
+      0.4
+     ],
+     "zbound": [
+      -10,
+      10,
+      20.0
+     ]
+    },
+    "sensor_type": "camera"
+   }
+  }
+ },
+ "input_source": [
+  "camera"
+ ],
+ "label_type": "camera",
+ "loss": {
+  "args": {
+   "cls": {
+    "alpha": 0.25,
+    "gamma": 2.0,
+    "type": "SigmoidFocalLoss",
+    "weight": 1.0
+   },
+   "depth": {
+    "weight": 1.0
+   },
+   "dir": {
+    "args": {
+     "anchor_yaw": [
+      0,
+      90
+     ],
+     "dir_offset": 0.7853,
+     "num_bins": 2
+    },
+    "type": "WeightedSoftmaxClassificationLoss",
+    "weight": 0.2
+   },
+   "pos_cls_weight": 2.0,
+   "pyramid": {
+    "relative_downsample": [
+     1,
+     2,
+     4
+    ],
+    "weight": [
+     0.4,
+     0.2,
+     0.1
+    ]
+   },
+   "reg": {
+    "codewise": true,
+    "sigma": 3.0,
+    "type": "WeightedSmoothL1Loss",
+    "weight": 2.0
+   }
+  },
+  "core_method": "point_pillar_pyramid_balanced_bce_loss"
+ },
+ "lr_scheduler": {
+  "core_method": "multistep",
+  "gamma": 0.1,
+  "step_size": [
+   8,
+   12
+  ]
+ },
+ "max_cav": 2,
+ "model": {
+  "args": {
+   "anchor_number": 2,
+   "dir_args": {
+    "anchor_yaw": [
+     0,
+     90
+    ],
+    "dir_offset": 0.7853,
+    "num_bins": 2
+   },
+   "fusion_backbone": {
+    "anchor_number": 2,
+    "layer_nums": [
+     3,
+     5,
+     8
+    ],
+    "layer_strides": [
+     1,
+     2,
+     2
+    ],
+    "num_filters": [
+     64,
+     128,
+     256
+    ],
+    "num_upsample_filter": [
+     128,
+     128,
+     128
+    ],
+    "resnext": true,
+    "upsample_strides": [
+     1,
+     2,
+     4
+    ]
+   },
+   "in_head": 256,
+   "lidar_range": [
+    -51.2,
+    -51.2,
+    -3,
+    51.2,
+    51.2,
+    1
+   ],
+   "m2": {
+    "aligner_args": {
+     "core_method": "identity"
+    },
+    "backbone_args": {
+     "inplanes": 128,
+     "layer_nums": [
+      3
+     ],
+     "layer_strides": [
+      2
+     ],
+     "num_filters": [
+      64
+     ]
+    },
+    "camera_mask_args": {
+     "cav_lidar_range": [
+      -51.2,
+      -51.2,
+      -3,
+      51.2,
+      51.2,
+      1
+     ],
+     "grid_conf": {
+      "ddiscr": [
+       2,
+       50,
+       48
+      ],
+      "mode": "LID",
+      "xbound": [
+       -51.2,
+       51.2,
+       0.4
+      ],
+      "ybound": [
+       -51.2,
+       51.2,
+       0.4
+      ],
+      "zbound": [
+       -10,
+       10,
+       20.0
+      ]
+     }
+    },
+    "core_method": "lift_splat_shoot",
+    "encoder_args": {
+     "anchor_number": 2,
+     "camera_encoder": "EfficientNet",
+     "data_aug_conf": {
+      "H": 480,
+      "Ncams": 1,
+      "W": 640,
+      "bot_pct_lim": [
+       0.0,
+       0.05
+      ],
+      "cams": [
+       "camera0",
+       "camera1",
+       "camera2",
+       "camera3"
+      ],
+      "final_dim": [
+       384,
+       512
+      ],
+      "rand_flip": true,
+      "resize_lim": [
+       0.8125,
+       0.875
+      ],
+      "rot_lim": [
+       -3.6,
+       3.6
+      ]
+     },
+     "depth_supervision": false,
+     "grid_conf": {
+      "ddiscr": [
+       2,
+       50,
+       48
+      ],
+      "mode": "LID",
+      "xbound": [
+       -51.2,
+       51.2,
+       0.4
+      ],
+      "ybound": [
+       -51.2,
+       51.2,
+       0.4
+      ],
+      "zbound": [
+       -10,
+       10,
+       20.0
+      ]
+     },
+     "img_downsample": 8,
+     "img_features": 128,
+     "use_depth_gt": false
+    },
+    "sensor_type": "camera"
+   },
+   "shrink_header": {
+    "dim": [
+     256
+    ],
+    "input_dim": 384,
+    "kernal_size": [
+     3
+    ],
+    "padding": [
+     1
+    ],
+    "stride": [
+     1
+    ]
+   },
+   "supervise_single": true
+  },
+  "core_method": "heter_pyramid_collab"
+ },
+ "name": "QCarPyramid_coop",
+ "noise_setting": {
+  "add_noise": false
+ },
+ "optimizer": {
+  "args": {
+   "eps": 1e-10,
+   "weight_decay": 0.0001
+  },
+  "core_method": "Adam",
+  "lr": 1e-05
+ },
+ "postprocess": {
+  "anchor_args": {
+   "D": 1,
+   "H": 256,
+   "W": 256,
+   "cav_lidar_range": [
+    -51.2,
+    -51.2,
+    -3,
+    51.2,
+    51.2,
+    1
+   ],
+   "feature_stride": 2,
+   "h": 1.56,
+   "l": 3.9,
+   "num": 2,
+   "r": [
+    0,
+    90
+   ],
+   "vd": 4,
+   "vh": 0.4,
+   "vw": 0.4,
+   "w": 1.6
+  },
+  "core_method": "VoxelPostprocessor",
+  "dir_args": {
+   "anchor_yaw": [
+    0,
+    90
+   ],
+   "dir_offset": 0.7853,
+   "num_bins": 2
+  },
+  "gt_range": [
+   -51.2,
+   -51.2,
+   -3,
+   51.2,
+   51.2,
+   1
+  ],
+  "max_num": 150,
+  "nms_thresh": 0.05,
+  "order": "hwl",
+  "target_args": {
+   "neg_threshold": 0.45,
+   "pos_threshold": 0.6,
+   "score_threshold": 0.2
+  }
+ },
+ "preprocess": {
+  "args": {
+   "max_points_per_voxel": 1,
+   "max_voxel_test": 1,
+   "max_voxel_train": 1,
+   "voxel_size": [
+    0.4,
+    0.4,
+    4
+   ]
+  },
+  "cav_lidar_range": [
+   -51.2,
+   -51.2,
+   -3,
+   51.2,
+   51.2,
+   1
+  ],
+  "core_method": "SpVoxelPreprocessor"
+ },
+ "root_dir": "<DATASET_ROOT>/train",
+ "test_dir": null,
+ "train_params": {
+  "batch_size": 1,
+  "epoches": 15,
+  "eval_freq": 1,
+  "max_cav": 2,
+  "save_freq": 1
+ },
+ "validate_dir": "<DATASET_ROOT>/validate",
+ "yaml_parser": "load_general_params"
+}

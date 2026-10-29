@@ -1,0 +1,7 @@
+# checkpoints are release assets, see checkpoints/MANIFEST.md
+*.pth
+*.pt
+__pycache__/
+*.pyc
+.DS_Store
+.venv/

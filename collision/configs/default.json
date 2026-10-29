@@ -1,0 +1,23 @@
+{
+ "min_detection_confidence": {
+  "coop": 0.95,
+  "ego_only": 0.95
+ },
+ "risk": {
+  "acceleration_noise_std": 0.01,
+  "expire_source_age_s": 0.6,
+  "forecast_horizon_s": 2.0,
+  "forecast_interval_s": 0.05,
+  "live_update_timeout_s": 0.11,
+  "sigma_multiplier": 0.25,
+  "warning_horizon_s": {
+   "coop": 0.8,
+   "ego_only": 0.8
+  }
+ },
+ "tracker": {
+  "association_gate_m": 0.15,
+  "max_speed_mps": 2.0,
+  "position_noise_std_m": 0.020740488506483138
+ }
+}

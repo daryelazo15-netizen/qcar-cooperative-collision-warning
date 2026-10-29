@@ -1,0 +1,36 @@
+diff --git a/qcar_testbed_integration/calibration/vehicles.json b/qcar_testbed_integration/calibration/vehicles.json
+index d67a9b7..f6e20d1 100644
+--- a/qcar_testbed_integration/calibration/vehicles.json
++++ b/qcar_testbed_integration/calibration/vehicles.json
+@@ -18,7 +18,7 @@
+       "footprint": "ego",
+       "calib_name": "qcar52775",
+       "vis_mask_file": "qcar52775_bev_visibility.png",
+-      "camera_extrinsic": "manual_nominal",
++      "camera_extrinsic": "qcar52775_refined",
+       "_camera_extrinsic_note": "Manufacturer extrinsic chosen 2026-10-14 (decision: same geometry for both cars, in building and training). qcar52775_refined is kept below as the first thing to try if detection degrades; the zoo models trained before 2026-10-14 used its R."
+     },
+     "2": {
+@@ -28,7 +28,7 @@
+       "footprint": "target",
+       "calib_name": "qcar52776",
+       "vis_mask_file": "qcar52776_bev_visibility.png",
+-      "camera_extrinsic": "manual_nominal",
++      "camera_extrinsic": "car2_tilt3down",
+       "_assumption": "the car recorded as agent 2 in ExperimentNo1 (Sept) is this same physical car; unconfirmed as of 2026-10-14."
+     }
+   },
+@@ -52,6 +52,13 @@
+                [0.03970744, -0.9962637, -0.07669397]],
+       "t_cb_m": [0.21306336, -0.00169975, 0.11930449],
+       "source": "qcar-52775 front camera, refined 2026-09-14 from 19 image/Vicon click correspondences (0.46-2.9 m, full yaw range), median reprojection error 7.7 px. NOT USED since 2026-10-14 (vehicles use manual_nominal); kept as the alternative to test first if detection degrades."
++    },
++    "car2_tilt3down": {
++      "R_cb": [[0.0, -0.05233596, 0.99862953],
++               [-1.0, 0.0, 0.0],
++               [0.0, -0.99862953, -0.05233596]],
++      "t_cb_m": [0.1930, 0.0, 0.0953],
++      "source": "manual_nominal rotated 3.0 deg down about the camera x axis (car 2 front camera pitch)."
+     }
+   }
+ }

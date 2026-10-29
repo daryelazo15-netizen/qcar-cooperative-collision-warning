@@ -1,0 +1,7 @@
+# collision/ and tracking/: Python 3.11 standard library plus shapely (bird's-eye-view IoU in collision/own_vehicles.py)
+shapely
+# live/viewer.py and its test: opencv-python, numpy, Pillow (Tk for the on-screen window)
+numpy
+opencv-python
+Pillow
+# The live loop (live/run_live.py) and perception/ also need the HEAL environment of the fork (torch, opencood, the ROS 1 client of qcar/realtime).

@@ -1,0 +1,34 @@
+{
+  "_comment": "Defaults of live/run_live.py (a CLI flag overrides the matching key). Relative paths resolve against the HEAL repo root. Frame synchronization (fps, wait_sec, camera_tolerance, vicon_max_age, vicon_pose_key) is read from convert_conf, so live frames are assembled with the settings the training data were. Cross-car pair_tolerance_sec, car identity, calibration and the HEAL frame format come from build_inference.py (build_inference_py). ros_master_uri: each car's ROS master, {ip} = that car's ip in calibration/vehicles.json (override one with --master 1=http://<ego-ip>:11311). cameras: HEAL uses front only. pair_wait_sec: how long an ego frame waits for its peer before it is dropped. max_network_lag_sec: extra time messages are kept so a late image still finds its Vicon sample. topics: the front image is read from the compressed topic /qcar/csi_front/compressed (a raw image topic saturates the Wi-Fi); the message type is detected. model_dir, live_dir, output_jsonl: replace <QCAR_LIVE_ROOT> (workspace folder). record_dir: null = do not record. output_jsonl may use {session}. view_bev_range_m: [xmin, xmax, ymin, ymax] of the bird's-eye view in motion-capture metres. view_max_hz: redraw cap.",
+  "model_dir": "<QCAR_LIVE_ROOT>/model_dir",
+  "amp": true,
+  "ros_master_uri": "http://{ip}:11311",
+  "topics": {
+    "front": "/qcar/csi_front/compressed",
+    "back": "/qcar/csi_back",
+    "left": "/qcar/csi_left",
+    "right": "/qcar/csi_right",
+    "vicon": "/qcar/vicon"
+  },
+  "cameras": [
+    "front"
+  ],
+  "pair_wait_sec": 0.5,
+  "max_network_lag_sec": 2.0,
+  "live_dir": "<QCAR_LIVE_ROOT>/live_tmp",
+  "output_jsonl": "<QCAR_LIVE_ROOT>/results/live_{session}.jsonl",
+  "record_dir": null,
+  "view": false,
+  "view_bev_range_m": [
+    -3.5,
+    3.5,
+    -3.0,
+    3.0
+  ],
+  "view_max_hz": 10.0,
+  "reconnect_sec": 2.0,
+  "stats_every_sec": 5.0,
+  "build_inference_py": "qcar_testbed_integration/data/qcar_dataset/pipeline/scripts/build/cooperative/build_inference.py",
+  "converter_py": "qcar_testbed_integration/data/qcar_dataset/pipeline/scripts/convert/bag_to_dataset_rosbags.py",
+  "convert_conf": "qcar_testbed_integration/data/qcar_dataset/pipeline/scripts/convert/conf.json"
+}

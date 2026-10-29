@@ -1,0 +1,31 @@
+diff --git a/qcar/realtime/conf.json b/qcar/realtime/conf.json
+index 73ce13c..6070b2c 100644
+--- a/qcar/realtime/conf.json
++++ b/qcar/realtime/conf.json
+@@ -1,10 +1,10 @@
+ {
+   "_comment": "THE defaults for qcar/realtime/run.py and fake_car.py -- the scripts hardcode none of these. A CLI flag overrides the matching key for one run; no script writes this file. Relative paths resolve against the HEAL repo root. Frame synchronization (fps, wait_sec, camera_tolerance, vicon_max_age, vicon_pose_key) is NOT here on purpose: it is read from convert_conf (bag_to_dataset_rosbags.py's conf.json) so live frames are assembled with the exact settings the training data was. Cross-car pair_tolerance_sec, car identity (agent 1 = qcar-52775 = ego, 2 = qcar-52776), calibration and the HEAL frame format come from build_inference.py (build_inference_py). ros_master_uri: each car's ROS master, {ip} = that car's current ip in calibration/vehicles.json (override one with --master 1=http://...). cameras: which cameras to subscribe to -- HEAL only uses front; add back/left/right only if record_dir should keep them (each is ~0.9 MB/msg at 20 Hz per car over the network). pair_wait_sec: how long an ego frame waits for its peer before it is dropped. max_network_lag_sec: extra time messages are kept so a late image (saturated WiFi) still finds its Vicon sample. topics: raw sensor_msgs/Image (~0.9 MB) saturates the WiFi; if the car republishes compressed (rosrun image_transport republish raw in:=/qcar/csi_front compressed out:=/qcar/csi_front), set front to /qcar/csi_front/compressed -- the message type is detected automatically. record_dir: null = do not record; otherwise every fused pair is also saved in the converter's per-frame layout (build_inference.py can rebuild it offline). output_jsonl may use {session}. view: open the live viewer (3 windows: each CAV's POV with the fused detections projected, and a bird's-eye view; q or closing a window stops run.py); --no_view disables it. view_bev_range_m: [xmin, xmax, ymin, ymax] of the bird's-eye view in Vicon metres; walls come from build_inference.py's scene_json. view_max_hz: redraw cap, so drawing never slows the inference loop. fake_car_*: defaults of fake_car.py (bag replay for testing without the cars).",
+-  "model_dir": "checkpoints/qcar/zoo/pyramid",
++  "model_dir": "<QCAR_LIVE_ROOT>/model_dir",
+   "amp": true,
+   "ros_master_uri": "http://{ip}:11311",
+   "topics": {
+-    "front": "/qcar/csi_front",
++    "front": "/qcar/csi_front/compressed",
+     "back": "/qcar/csi_back",
+     "left": "/qcar/csi_left",
+     "right": "/qcar/csi_right",
+@@ -13,10 +13,10 @@
+   "cameras": ["front"],
+   "pair_wait_sec": 0.5,
+   "max_network_lag_sec": 2.0,
+-  "live_dir": "/dev/shm/qcar_realtime",
+-  "output_jsonl": "opencood/logs/realtime/{session}.jsonl",
++  "live_dir": "<QCAR_LIVE_ROOT>/live_tmp",
++  "output_jsonl": "<QCAR_LIVE_ROOT>/results/live_{session}.jsonl",
+   "record_dir": null,
+-  "view": true,
++  "view": false,
+   "view_bev_range_m": [-3.5, 3.5, -3.0, 3.0],
+   "view_max_hz": 10.0,
+   "reconnect_sec": 2.0,
