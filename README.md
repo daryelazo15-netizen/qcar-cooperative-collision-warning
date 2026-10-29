@@ -101,7 +101,7 @@ prints the `unittest` summary of the `tracking`, `collision`, `perception` and `
 
 ## Authors and credits
 
-- **Daryel León** (PhD student, Concordia University): tracking, collision module, online collision wrapper, and the changes to the perception and live-loop code for this system.
+- **Daryel Leon** (PhD student, Concordia University): tracking, collision module, online collision wrapper, and the changes to the perception and live-loop code for this system.
 - **Kevin Saavedra** (MSc, University of Calabria): integration of HEAL on the QCar testbed ([`QCAR-HEAL_Integration`](https://github.com/Saavkd7/QCAR-HEAL_Integration)), developed as part of the **MITACS** program, including the original live loop. The files in `live/` (`run_live.py`, `heal_input.py`, `viewer.py`) derive from his `qcar/realtime/` code; `perception/diffs/` shows the changes.
 - Supervisors: **Chadi Assi** (Concordia University), **Wissam Fawaz** (Lebanese American University) and **Floriano De Rango** (University of Calabria).
 
